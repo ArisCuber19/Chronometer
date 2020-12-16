@@ -39,7 +39,7 @@ class Main extends StatelessWidget {
               Tab(icon: Icon(Icons.access_alarms)),
             ],
             labelColor: Colors.blue,
-            unselectedLabelColor: Colors.lightGreen,
+            unselectedLabelColor: Colors.purple,
           ),
         ),
       ),
