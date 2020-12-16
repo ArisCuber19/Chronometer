@@ -34,7 +34,7 @@ class Main extends StatelessWidget {
             children: [
               Alarm(),
               Chronometer(),
-              Clock(),
+              Timer(),
             ],
           ),
           bottomNavigationBar: TabBar(
@@ -82,12 +82,12 @@ class _ChronometerState extends State<Chronometer> {
   }
 }
 
-class Clock extends StatefulWidget {
+class Timer extends StatefulWidget {
   @override
-  _ClockState createState() => _ClockState();
+  _TimerState createState() => _TimerState();
 }
 
-class _ClockState extends State<Clock> {
+class _TimerState extends State<Timer> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
