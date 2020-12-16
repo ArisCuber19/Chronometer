@@ -57,7 +57,7 @@ class _AlarmState extends State<Alarm> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Center(
-      child: Text("Buongiorno alla stanza"),
+      child: Text("Buongiorno all'allarme"),
     );
   }
 }
@@ -87,7 +87,7 @@ class _ClockState extends State<Clock> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Center(
-      child: Text("Buongiorno al clock"),
+      child: Text("Buongiorno al timer"),
     );
   }
 }
