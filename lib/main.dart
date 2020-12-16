@@ -25,7 +25,6 @@ class Main extends StatelessWidget {
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
-          appBar: AppBar(),
           body: TabBarView(
             children: [
               Alarm(),
