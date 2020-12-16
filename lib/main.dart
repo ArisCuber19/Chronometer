@@ -9,11 +9,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Clock',
         theme: ThemeData(
+          brightness: Brightness.light,
           primarySwatch: Colors.lightBlue,
         ),
-        darkTheme: ThemeData.dark(),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.lightBlue,
+        ),
+        themeMode: ThemeMode.system,
         home: Main());
   }
 }
@@ -35,8 +40,8 @@ class Main extends StatelessWidget {
           bottomNavigationBar: TabBar(
             tabs: [
               Tab(icon: Icon(Icons.alarm)),
-              Tab(icon: Icon(Icons.watch)),
-              Tab(icon: Icon(Icons.access_alarms)),
+              Tab(icon: Icon(Icons.timer)),
+              Tab(icon: Icon(Icons.access_time_outlined)),
             ],
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.purple,
