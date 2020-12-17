@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,9 +33,9 @@ class Main extends StatelessWidget {
         child: Scaffold(
           body: TabBarView(
             children: [
-              Alarm(),
-              Chronometer(),
-              Timer(),
+              AlarmTab(),
+              ChronometerTab(),
+              TimerTab(),
             ],
           ),
           bottomNavigationBar: TabBar(
@@ -52,45 +53,61 @@ class Main extends StatelessWidget {
   }
 }
 
-class Alarm extends StatefulWidget {
+class AlarmTab extends StatefulWidget {
   @override
-  _AlarmState createState() => _AlarmState();
+  _AlarmTabState createState() => _AlarmTabState();
 }
 
-class _AlarmState extends State<Alarm> {
+class _AlarmTabState extends State<AlarmTab> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Center(
       child: Text("Buongiorno all'allarme"),
     );
   }
 }
 
-class Chronometer extends StatefulWidget {
+class ChronometerTab extends StatefulWidget {
   @override
-  _ChronometerState createState() => _ChronometerState();
+  _ChronometerTabState createState() => _ChronometerTabState();
 }
 
-class _ChronometerState extends State<Chronometer> {
+class _ChronometerTabState extends State<ChronometerTab> {
+  String _elapsed;
+  var stopwatch = new Stopwatch();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // sets first value
+    _elapsed = stopwatch.elapsed.toString();
+
+    // defines a timer
+    Timer _everySecond = Timer.periodic(Duration(milliseconds: 1), (Timer t) {
+      setState(() {
+        _elapsed = stopwatch.elapsed.toString();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    stopwatch.start();
     return Center(
-      child: Text("Buongiorno al cronometro"),
+      child: Text(_elapsed),
     );
   }
 }
 
-class Timer extends StatefulWidget {
+class TimerTab extends StatefulWidget {
   @override
-  _TimerState createState() => _TimerState();
+  _TimerTabState createState() => _TimerTabState();
 }
 
-class _TimerState extends State<Timer> {
+class _TimerTabState extends State<TimerTab> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Center(
       child: Text("Buongiorno al timer"),
     );
