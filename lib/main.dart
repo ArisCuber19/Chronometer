@@ -23,36 +23,72 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightBlue,
         ),
         themeMode: ThemeMode.system,
-        home: Main());
+        home: MyStatefulWidget());
   }
 }
 
-class Main extends StatelessWidget {
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+/// This is the private State class that goes with MyStatefulWidget.
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Alarm',
+      style: optionStyle,
+    ),
+    ChronometerTab(),
+    TimerTab(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          body: TabBarView(
-            children: [
-              AlarmTab(),
-              ChronometerTab(),
-              TimerTab(),
-            ],
-          ),
-          bottomNavigationBar: TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.alarm)),
-              Tab(icon: Icon(Icons.timer)),
-              Tab(icon: Icon(Icons.access_time_outlined)),
-            ],
-            labelColor: Colors.blue,
-            unselectedLabelColor: Colors.purple,
-          ),
+    return Scaffold(
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
-      ),
-    );
+        bottomNavigationBar: Material(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(22),
+              topRight: Radius.circular(22),
+            ),
+          ),
+          clipBehavior: Clip.antiAlias,
+          elevation: 22,
+          child: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.alarm),
+                label: 'Alarm',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.timer),
+                label: 'Chronometer',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.hourglass_bottom),
+                label: 'Timer',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Color(0xFF9544E7),
+            onTap: _onItemTapped,
+          ),
+        ));
   }
 }
 
