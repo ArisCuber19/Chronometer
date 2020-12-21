@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:core';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'dart:async';
+import 'StopwatchButtonBar.dart';
+import 'CustomDuration.dart';
+import 'CustomStopwatch.dart';
 
 void main() {
   runApp(MyApp());
@@ -77,8 +77,7 @@ class ChronometerTab extends StatefulWidget {
 
 class _ChronometerTabState extends State<ChronometerTab> {
   String _elapsed;
-  var stopwatch = new SubStopwatch();
-
+  var stopwatch = new CustomStopwatch();
   @override
   void initState() {
     super.initState();
@@ -105,7 +104,7 @@ class _ChronometerTabState extends State<ChronometerTab> {
             child:
                 Center(child: Text(_elapsed, style: TextStyle(fontSize: 30)))),
         Center(
-            child: StartStopButtonBar(
+            child: StopwatchButtonBar(
           stopwatch: stopwatch,
         ))
       ],
@@ -119,128 +118,46 @@ class TimerTab extends StatefulWidget {
 }
 
 class _TimerTabState extends State<TimerTab> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text("Timer placeholder"),
-    );
+  CustomStopwatch timer;
+  String _remaining;
+
+  /* onStart() {
+    timer = new SubStopwatch.timer(countdown: Duration(minutes: 25));
   }
-}
-
-class SubDuration extends Duration {
-  /* Invoking original Duration constructor */
-  @override
-  SubDuration(
-      {int days = 0,
-      int hours = 0,
-      int minutes = 0,
-      int seconds = 0,
-      int milliseconds = 0,
-      int microseconds = 0})
-      : super(
-            days: days,
-            hours: hours,
-            minutes: minutes,
-            seconds: seconds,
-            milliseconds: milliseconds,
-            microseconds: microseconds);
-
-  /*Overriding toString() method of Duration class so it displays 
-  * the current elapsed time as 0:00:00.00*/
-  @override
-  String toString() {
-    String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
-    }
-
-    if (inMicroseconds < 0) {
-      return "-${-this}";
-    }
-    String twoDigitMinutes =
-        twoDigits(inMinutes.remainder(Duration.minutesPerHour) as int);
-    String twoDigitSeconds =
-        twoDigits(inSeconds.remainder(Duration.secondsPerMinute) as int);
-    String twoDigitUs = twoDigits(
-        inMicroseconds.remainder(Duration.microsecondsPerSecond).remainder(59));
-
-    return "$inHours:$twoDigitMinutes:$twoDigitSeconds.$twoDigitUs";
-  }
-}
-
-/*Overridden stopwatch class to change return value of elapsed getter as Duration
-* subclass */
-class SubStopwatch extends Stopwatch {
-  @override
-  SubStopwatch() : super();
-
-  @override
-  SubDuration get elapsed => SubDuration(microseconds: elapsedMicroseconds);
-}
-
-/* Defining new StatefulWidget class which renders different buttons in the buttonBar according to 
-* stopwatch state */
-class StartStopButtonBar extends StatefulWidget {
-  final SubStopwatch stopwatch;
-
-  const StartStopButtonBar({Key key, this.stopwatch}) : super(key: key);
-  @override
-  _StartStopButtonBarState createState() => _StartStopButtonBarState();
-}
-
-class _StartStopButtonBarState extends State<StartStopButtonBar> {
-  List<Widget> _buttonBarList = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return ButtonBar(mainAxisSize: MainAxisSize.min, children: _buttonBarList);
-  }
-
+ */
   @override
   void initState() {
     super.initState();
-    onReset();
+    timer = new CustomStopwatch.timer(countdown: CustomDuration(minutes: 25));
+
+    // sets first value
+    _remaining = timer.remaining.toStringUntilSeconds();
+
+    /* Every 1 ms, the _elapsed content is refreshed according to 
+    * stopwatch value */
+    Timer.periodic(Duration(milliseconds: 1), (Timer t) {
+      if (mounted) {
+        setState(() {
+          _remaining = timer.remaining.toStringUntilSeconds();
+        });
+      }
+    });
   }
 
-  onPressingStart() {
-    widget.stopwatch.start();
-    onRunning();
-  }
-
-  onPressingPause() {
-    widget.stopwatch.stop();
-    onPaused();
-  }
-
-  onPressingStop() {
-    widget.stopwatch.reset();
-    onReset();
-  }
-
-  /* When stopwatch is stopped the app must shows only the start button */
-  onReset() {
-    _buttonBarList = [
-      IconButton(
-          icon: Icon(Icons.play_circle_filled_rounded),
-          onPressed: () => {onPressingStart()}),
-    ];
-  }
-
-  onRunning() {
-    _buttonBarList = [
-      IconButton(
-          icon: Icon(Icons.pause_circle_filled_rounded),
-          onPressed: () => {onPressingPause()})
-    ];
-  }
-
-  onPaused() {
-    _buttonBarList = [
-      IconButton(
-          icon: Icon(Icons.play_circle_filled_rounded),
-          onPressed: () => {onPressingStart()}),
-      IconButton(
-          icon: Icon(Icons.stop_circle), onPressed: () => {onPressingStop()})
-    ];
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          Expanded(
+              child: Center(
+                  child: Text(_remaining, style: TextStyle(fontSize: 30)))),
+          Center(
+              child: StopwatchButtonBar(
+            stopwatch: timer,
+          ))
+        ],
+      ),
+    );
   }
 }
